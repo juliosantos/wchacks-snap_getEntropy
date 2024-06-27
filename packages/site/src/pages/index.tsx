@@ -1,10 +1,11 @@
 import styled from 'styled-components';
+import { useState } from 'react';
 
 import {
   ConnectButton,
   InstallFlaskButton,
   ReconnectButton,
-  SendHelloButton,
+  GetEntropyButton,
   Card,
 } from '../components';
 import { defaultSnapOrigin } from '../config';
@@ -72,6 +73,9 @@ const Notice = styled.div`
   margin-top: 2.4rem;
   max-width: 60rem;
   width: 100%;
+  font-family: monospace;
+  text-align: center;
+  font-size: 1.5em;
 
   & > * {
     margin: 0;
@@ -105,22 +109,23 @@ const Index = () => {
   const { isFlask, snapsDetected, installedSnap } = useMetaMask();
   const requestSnap = useRequestSnap();
   const invokeSnap = useInvokeSnap();
+  const [entropy, setEntropy] = useState("");
 
   const isMetaMaskReady = isLocalSnap(defaultSnapOrigin)
     ? isFlask
     : snapsDetected;
 
-  const handleSendHelloClick = async () => {
-    await invokeSnap({ method: 'hello' });
+  const handleGetEntropyClick = async () => {
+    setEntropy(await invokeSnap({ method: 'wallet_getEntropy' }));
   };
 
   return (
     <Container>
       <Heading>
-        Welcome to <Span>template-snap</Span>
+        Entropy from a <Span>MetaMask Snap</Span>
       </Heading>
       <Subtitle>
-        Get started by editing <code>src/index.ts</code>
+        Using <code>snap_getEntropy</code>
       </Subtitle>
       <CardContainer>
         {error && (
@@ -142,9 +147,9 @@ const Index = () => {
         {!installedSnap && (
           <Card
             content={{
-              title: 'Connect',
+              title: 'Connect Snap',
               description:
-                'Get started by connecting to and installing the example snap.',
+                '',
               button: (
                 <ConnectButton
                   onClick={requestSnap}
@@ -158,9 +163,9 @@ const Index = () => {
         {shouldDisplayReconnectButton(installedSnap) && (
           <Card
             content={{
-              title: 'Reconnect',
+              title: 'Reconnect Snap',
               description:
-                'While connected to a local running snap this button will always be displayed in order to update the snap if a change is made.',
+                '',
               button: (
                 <ReconnectButton
                   onClick={requestSnap}
@@ -173,12 +178,12 @@ const Index = () => {
         )}
         <Card
           content={{
-            title: 'Send Hello message',
+            title: 'Ye Olde Entropy Shoppe',
             description:
-              'Display a custom message within a confirmation screen in MetaMask.',
+              "“Shopkeep, I'll have 256 bits of your best entropy”",
             button: (
-              <SendHelloButton
-                onClick={handleSendHelloClick}
+              <GetEntropyButton
+                onClick={handleGetEntropyClick}
                 disabled={!installedSnap}
               />
             ),
@@ -190,13 +195,10 @@ const Index = () => {
             !shouldDisplayReconnectButton(installedSnap)
           }
         />
-        <Notice>
-          <p>
-            Please note that the <b>snap.manifest.json</b> and{' '}
-            <b>package.json</b> must be located in the server root directory and
-            the bundle must be hosted at the location specified by the location
-            field.
-          </p>
+        <Notice id="entropy-display">
+          {entropy.substr(0, entropy.length / 2)}
+          <br/>
+          {entropy.substr(entropy.length / 2)}
         </Notice>
       </CardContainer>
     </Container>

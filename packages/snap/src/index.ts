@@ -30,6 +30,14 @@ export const onRpcRequest: OnRpcRequestHandler = async ({
           ]),
         },
       });
+    case 'wallet_getEntropy':
+      return snap.request({
+        method: "snap_getEntropy",
+        params: {
+          version: 1,
+          //salt: "";
+        },
+      });
     default:
       throw new Error('Method not found.');
   }

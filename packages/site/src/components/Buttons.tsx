@@ -95,8 +95,8 @@ export const ReconnectButton = (props: ComponentProps<typeof Button>) => {
   );
 };
 
-export const SendHelloButton = (props: ComponentProps<typeof Button>) => {
-  return <Button {...props}>Send message</Button>;
+export const GetEntropyButton = (props: ComponentProps<typeof Button>) => {
+  return <Button {...props}>Get scoped entropy</Button>;
 };
 
 export const HeaderButtons = () => {
